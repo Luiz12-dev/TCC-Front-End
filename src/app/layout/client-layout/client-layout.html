@@ -1,0 +1,112 @@
+<div class="client-wrapper">
+  <!-- Header -->
+  <header class="client-header">
+    <div class="header-inner">
+      <!-- Logo -->
+      <a routerLink="/client/booking" class="logo-link">
+        <div class="logo-icon">
+          <i class="ph ph-scissors"></i>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">CORTÊS</span>
+          <span class="logo-sub">Barbearia</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav (Center) -->
+      <nav class="desktop-nav">
+        <a routerLink="/client/booking" routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+          <i class="ph ph-calendar-plus"></i>
+          <span>Agendar</span>
+        </a>
+        <a routerLink="/client/history" routerLinkActive="active" class="nav-link">
+          <i class="ph ph-clock-counter-clockwise"></i>
+          <span>Histórico</span>
+        </a>
+      </nav>
+
+      <!-- User Area (Right) -->
+      <div class="user-area">
+        <div class="user-dropdown-container" (clickOutside)="userMenuOpen = false">
+          <button class="user-button" (click)="toggleUserMenu($event)">
+            <div class="user-avatar">{{ userInitials }}</div>
+            <div class="user-info hide-mobile">
+              <span class="user-name">{{ userName }}</span>
+              <span class="user-role">Cliente</span>
+            </div>
+            <i class="ph ph-caret-down hide-mobile" [class.rotated]="userMenuOpen"></i>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          @if (userMenuOpen) {
+            <div class="dropdown-menu">
+              <div class="dropdown-header hide-desktop">
+                <span class="dropdown-name">{{ userName }}</span>
+                <span class="dropdown-email">Cliente</span>
+              </div>
+              
+              <a routerLink="/client/history" class="dropdown-item" (click)="userMenuOpen = false">
+                <i class="ph ph-clock-counter-clockwise"></i>
+                Meu Histórico
+              </a>
+              
+              <div class="dropdown-divider"></div>
+              
+              <button class="dropdown-item text-error" (click)="logout()">
+                <i class="ph ph-sign-out"></i>
+                Sair da conta
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu($event)">
+        <i [class]="mobileMenuOpen ? 'ph ph-x' : 'ph ph-list'"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Nav -->
+    @if (mobileMenuOpen) {
+      <nav class="mobile-nav">
+        <div class="mobile-user-profile">
+          <div class="user-avatar-large">{{ userInitials }}</div>
+          <div>
+            <span class="mobile-user-name">{{ userName }}</span>
+            <span class="mobile-user-role">Cliente</span>
+          </div>
+        </div>
+        
+        <a routerLink="/client/booking" routerLinkActive="active" 
+           (click)="closeMobileMenu()" class="mobile-link">
+          <i class="ph ph-calendar-plus"></i>
+          Agendar Horário
+        </a>
+        <a routerLink="/client/history" routerLinkActive="active" 
+           (click)="closeMobileMenu()" class="mobile-link">
+          <i class="ph ph-clock-counter-clockwise"></i>
+          Meu Histórico
+        </a>
+        <div class="mobile-divider"></div>
+        <button class="mobile-link logout" (click)="logout()">
+          <i class="ph ph-sign-out"></i>
+          Sair
+        </button>
+      </nav>
+    }
+  </header>
+
+  <!-- Main Content -->
+  <main class="client-main">
+    <div class="client-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="client-footer">
+    <p>© 2026 Cortês Barbearia · Todos os direitos reservados</p>
+  </footer>
+</div>

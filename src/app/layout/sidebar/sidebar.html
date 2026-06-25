@@ -1,0 +1,45 @@
+<div class="sidebar-header">
+  <div class="logo">
+    <div class="logo-icon"><i class="ph ph-scissors"></i></div>
+    <h2>CORTÊS</h2>
+  </div>
+</div>
+
+<div class="sidebar-nav">
+  <div class="nav-section">
+    <span class="nav-title">PRINCIPAL</span>
+    <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+      <i class="ph ph-squares-four"></i> Painel Geral
+    </a>
+    <a routerLink="/admin/agendamentos" routerLinkActive="active" class="nav-item">
+      <i class="ph ph-calendar-blank"></i> Agendamentos
+    </a>
+    <a routerLink="/admin/servicos" routerLinkActive="active" class="nav-item">
+      <i class="ph ph-scissors"></i> Serviços
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <span class="nav-title">CONFIGURAÇÕES</span>
+    <a routerLink="/admin/horarios" routerLinkActive="active" class="nav-item">
+      <i class="ph ph-clock"></i> Horários
+    </a>
+    <a routerLink="/admin/bloqueios" routerLinkActive="active" class="nav-item">
+      <i class="ph ph-prohibit"></i> Bloqueios
+    </a>
+    <a routerLink="/admin/financeiro" routerLinkActive="active" class="nav-item">
+      <i class="ph ph-chart-line-up"></i> Relatório Financeiro
+    </a>
+  </div>
+</div>
+
+<div class="sidebar-footer">
+  <div class="user-profile">
+    <div class="avatar">AD</div>
+    <div class="user-info">
+      <span class="user-name">Admin</span>
+      <span class="user-role">OWNER</span>
+    </div>
+  </div>
+  <button class="logout-btn" (click)="logout()" title="Sair"><i class="ph ph-sign-out"></i></button>
+</div>

@@ -1,0 +1,83 @@
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h2>Horários de Funcionamento</h2>
+    <p class="text-muted">Configure os horários de abertura e fechamento</p>
+  </div>
+  <button class="btn btn-primary" (click)="openModal()">
+    <i class="ph ph-plus"></i> Novo Horário
+  </button>
+</div>
+
+<div class="card business-card">
+  <div class="card-body" [class.empty-state]="loading || businessHours.length === 0">
+    <p *ngIf="loading" class="text-muted">Carregando...</p>
+    <p *ngIf="!loading && businessHours.length === 0" class="text-muted text-error">Nenhum horário configurado.</p>
+    
+    <div *ngIf="!loading && businessHours.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dia da Semana</th>
+            <th>Abertura</th>
+            <th>Fechamento</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bh of businessHours">
+            <td>{{ formatDayOfWeek(bh.dayOfWeek) }}</td>
+            <td>{{ bh.openTime }}</td>
+            <td>{{ bh.closeTime }}</td>
+            <td class="actions">
+              <button class="btn-icon" (click)="deleteHour(bh.id!)"><i class="ph ph-trash text-error"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (isModalOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content card" (click)="$event.stopPropagation()">
+      <div class="modal-header flex justify-between items-center">
+        <h3>Novo Horário</h3>
+        <button class="close-btn" (click)="closeModal()"><i class="ph ph-x"></i></button>
+      </div>
+      
+      <form [formGroup]="bhForm" (ngSubmit)="saveBusinessHour()">
+        <div class="modal-body flex-col gap-md">
+          <div class="form-group">
+            <label>DIA DA SEMANA</label>
+            <select formControlName="dayOfWeek">
+              <option value="MONDAY">Segunda-feira</option>
+              <option value="TUESDAY">Terça-feira</option>
+              <option value="WEDNESDAY">Quarta-feira</option>
+              <option value="THURSDAY">Quinta-feira</option>
+              <option value="FRIDAY">Sexta-feira</option>
+              <option value="SATURDAY">Sábado</option>
+              <option value="SUNDAY">Domingo</option>
+            </select>
+          </div>
+          
+          <div class="form-row flex gap-md">
+            <div class="form-group flex-1">
+              <label>ABERTURA</label>
+              <input type="time" formControlName="openTime">
+            </div>
+            <div class="form-group flex-1">
+              <label>FECHAMENTO</label>
+              <input type="time" formControlName="closeTime">
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer flex justify-end gap-md">
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="bhForm.invalid">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

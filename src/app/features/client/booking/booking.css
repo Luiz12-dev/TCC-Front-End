@@ -1,0 +1,332 @@
+/* ====================================
+   BOOKING — Wizard Stepper
+   ==================================== */
+
+/* Stepper */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2.5rem;
+  padding: 0 1rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.step.active .step-circle {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background-color: var(--accent-primary-glow);
+}
+
+.step.done .step-circle {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #000;
+}
+
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.step.active .step-label {
+  color: var(--accent-primary);
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border-color);
+  margin: 0 0.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 80px;
+  transition: background 0.3s;
+}
+
+.step-line.active {
+  background: var(--accent-primary);
+}
+
+/* Step Content */
+.step-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.animate-in {
+  animation: stepIn 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header {
+  margin-bottom: 1.5rem;
+}
+
+.step-header h2 {
+  font-size: 1.375rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.service-card:hover {
+  border-color: var(--border-light);
+  background-color: var(--bg-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-card.selected {
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-primary-glow), transparent);
+  box-shadow: var(--glow-accent-lg);
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--accent-primary-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+  font-size: 1.125rem;
+}
+
+.service-info h4 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.service-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.service-price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.service-duration {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Date Picker */
+.date-picker-wrapper {
+  max-width: 360px;
+}
+
+.date-picker-wrapper input[type="date"] {
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+/* Slots Grid */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.625rem;
+}
+
+.slot-btn {
+  padding: 0.625rem 0.5rem;
+  text-align: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slot-btn:hover {
+  border-color: var(--accent-primary);
+  background-color: var(--bg-surface-hover);
+}
+
+.slot-btn.selected {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #000;
+  font-weight: 700;
+  box-shadow: var(--glow-accent);
+}
+
+/* Confirmation */
+.confirmation-card {
+  padding: 1.5rem;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 0;
+}
+
+.confirm-row:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.confirm-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.confirm-label i {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+}
+
+.confirm-value {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.confirm-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.5rem 0;
+}
+
+.confirm-row.total {
+  border-bottom: none;
+}
+
+.confirm-value.price {
+  font-size: 1.25rem;
+  color: var(--accent-primary);
+}
+
+/* Success Screen */
+.success-screen {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: var(--status-done-text);
+  margin-bottom: 1.5rem;
+  animation: successPulse 0.6s ease;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.success-screen h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-details {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  font-size: 0.875rem;
+}
+
+/* Step Navigation */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ====================================
+   Responsive
+   ==================================== */
+@media (max-width: 768px) {
+  .stepper {
+    margin-bottom: 1.5rem;
+  }
+  
+  .step-label {
+    display: none;
+  }
+
+  .step-line {
+    margin-bottom: 0;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+}

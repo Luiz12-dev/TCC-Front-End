@@ -1,0 +1,6 @@
+/* App CSS now empty or just base styles as layout is handled by layout components */
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+}

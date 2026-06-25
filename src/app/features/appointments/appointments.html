@@ -1,0 +1,72 @@
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h2>Agendamentos</h2>
+    <p class="text-secondary">Todos os agendamentos da barbearia</p>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn" [class.active]="currentFilter === 'ALL'" (click)="applyFilter('ALL')">Todos</button>
+  <button class="filter-btn" [class.active]="currentFilter === 'PENDING'" (click)="applyFilter('PENDING')">Pendentes</button>
+  <button class="filter-btn" [class.active]="currentFilter === 'CONFIRMED'" (click)="applyFilter('CONFIRMED')">Confirmados</button>
+  <button class="filter-btn" [class.active]="currentFilter === 'IN_PROGRESS'" (click)="applyFilter('IN_PROGRESS')">Em andamento</button>
+  <button class="filter-btn" [class.active]="currentFilter === 'COMPLETED'" (click)="applyFilter('COMPLETED')">Concluídos</button>
+  <button class="filter-btn" [class.active]="currentFilter === 'CANCELLED'" (click)="applyFilter('CANCELLED')">Cancelados</button>
+</div>
+
+<div class="card appointments-card">
+  <div class="card-body" [class.empty-state]="loading || filteredAppointments.length === 0">
+    <p *ngIf="loading" class="text-muted">Carregando...</p>
+    <p *ngIf="!loading && filteredAppointments.length === 0" class="text-muted">Nenhum agendamento encontrado.</p>
+
+    <div *ngIf="!loading && filteredAppointments.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>CLIENTE</th>
+            <th>SERVIÇO</th>
+            <th>DATA / HORA</th>
+            <th>VALOR</th>
+            <th>STATUS</th>
+            <th class="actions">AÇÕES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of filteredAppointments">
+            <td>
+              <div class="client-cell">
+                <div class="client-avatar">{{ getClientInitials(app) }}</div>
+                <span>{{ app.clientName || app.clientId || 'Cliente' }}</span>
+              </div>
+            </td>
+            <td>{{ app.service?.serviceName || app.serviceName }}</td>
+            <td>{{ app.dateTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ app.price | currency:'BRL' }}</td>
+            <td>
+              <span [class]="getStatusBadgeClass(app.status)">
+                {{ translateStatus(app.status) | uppercase }}
+              </span>
+            </td>
+            <td class="actions">
+              <div class="action-group">
+                <select *ngIf="app.status !== 'COMPLETED' && app.status !== 'CANCELLED'"
+                  (change)="updateStatus(app.id!, $any($event.target).value)" [value]="app.status"
+                  class="status-select">
+                  <option value="PENDING">Pendente</option>
+                  <option value="CONFIRMED">Confirmado</option>
+                  <option value="IN_PROGRESS">Em Andamento</option>
+                  <option value="COMPLETED">Concluído</option>
+                </select>
+                <button *ngIf="app.status !== 'COMPLETED' && app.status !== 'CANCELLED'" 
+                        class="btn-icon cancel-btn"
+                        (click)="cancelAppointment(app.id!)" title="Cancelar">
+                  <i class="ph ph-x-circle"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="auth-card">
+  <div class="glow-effect"></div>
+  <div class="card-content">
+    <div class="auth-header">
+      <div class="logo-icon"><i class="ph ph-scissors"></i></div>
+      <h2>CORTÊS</h2>
+      <p class="text-muted">Sua melhor versão começa aqui.</p>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert-error">
+      <i class="ph ph-warning-circle"></i> {{ errorMsg }}
+    </div>
+    <div *ngIf="successMsg" class="alert-success">
+      <i class="ph ph-check-circle"></i> {{ successMsg }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>NOME COMPLETO</label>
+        <div class="input-with-icon">
+          <i class="ph ph-user"></i>
+          <input type="text" formControlName="username" placeholder="Como gosta de ser chamado?">
+        </div>
+      </div>
+
+      <div class="form-group mt-md">
+        <label>E-MAIL</label>
+        <div class="input-with-icon">
+          <i class="ph ph-envelope-simple"></i>
+          <input type="email" formControlName="email" placeholder="seu@email.com">
+        </div>
+      </div>
+      
+      <div class="form-group mt-md">
+        <label>SENHA</label>
+        <div class="input-with-icon">
+          <i class="ph ph-lock-key"></i>
+          <input type="password" formControlName="password" placeholder="Mínimo de 6 caracteres">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-xl btn-large" [disabled]="registerForm.invalid || loading">
+        <span *ngIf="!loading">Criar minha conta</span>
+        <span *ngIf="loading" class="flex justify-center items-center gap-sm">
+          <i class="ph ph-spinner animate-spin"></i> Finalizando...
+        </span>
+      </button>
+    </form>
+
+    <div class="auth-separator">
+      <span>ou</span>
+    </div>
+
+    <div class="auth-footer text-muted">
+      Já é de casa? <a routerLink="/auth/login">Faça Login</a>
+    </div>
+  </div>
+</div>

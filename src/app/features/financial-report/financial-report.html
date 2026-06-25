@@ -1,0 +1,73 @@
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h2>Relatório Financeiro</h2>
+    <p class="text-muted">Acompanhe o faturamento mensal da sua barbearia</p>
+  </div>
+  
+  <div class="report-filters flex gap-md">
+    <select [value]="selectedMonth" (change)="changeMonth($event)" class="filter-select">
+      <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+    </select>
+    
+    <select [value]="selectedYear" (change)="changeYear($event)" class="filter-select">
+      <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+    </select>
+  </div>
+</div>
+
+<div *ngIf="loading" class="card mt-xl p-xl flex justify-center items-center">
+  <p class="text-muted">Carregando dados financeiros...</p>
+</div>
+
+<div *ngIf="errorMsg" class="alert-error mt-xl">
+  {{ errorMsg }}
+</div>
+
+<div *ngIf="!loading && revenueData" class="report-dashboard mt-xl">
+  <div class="card summary-card">
+    <div class="card-body">
+      <div class="card-icon"><i class="ph ph-currency-circle-dollar"></i></div>
+      <div class="card-info">
+        <span class="card-title">Faturamento Total</span>
+        <h3 class="card-value">{{ revenueData.totalRevenue || 0 | currency:'BRL' }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card summary-card">
+    <div class="card-body">
+      <div class="card-icon"><i class="ph ph-check-circle"></i></div>
+      <div class="card-info">
+        <span class="card-title">Agendamentos Concluídos</span>
+        <h3 class="card-value">{{ revenueData.completedAppointmentsCount || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card summary-card">
+    <div class="card-body">
+      <div class="card-icon"><i class="ph ph-receipt"></i></div>
+      <div class="card-info">
+        <span class="card-title">Ticket Médio</span>
+        <h3 class="card-value">
+          {{ (revenueData.completedAppointmentsCount ? (revenueData.totalRevenue / revenueData.completedAppointmentsCount) : 0) | currency:'BRL' }}
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && revenueData" class="card mt-xl report-details">
+  <div class="card-header">
+    <h3>Insights do Mês</h3>
+  </div>
+  <div class="card-body">
+    <p class="text-muted">O faturamento reflete apenas os agendamentos marcados como <span class="badge-done">CONCLUÍDOS</span> no sistema para o mês de {{ months[selectedMonth-1].label }} de {{ selectedYear }}. Agendamentos pendentes ou cancelados não são contabilizados nesta receita.</p>
+    
+    <div class="visual-bar mt-xl">
+      <!-- Simple visual representation using CSS -->
+      <div class="bar-fill" [style.width.%]="revenueData.completedAppointmentsCount ? 100 : 0"></div>
+    </div>
+    <p class="text-sm text-muted mt-sm text-center">Volume de Vendas</p>
+  </div>
+</div>

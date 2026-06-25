@@ -1,0 +1,128 @@
+<div class="page-header">
+  <h2>Meu Histórico</h2>
+  <p class="text-secondary">Acompanhe e gerencie seus agendamentos</p>
+</div>
+
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+  <button class="filter-tab" [class.active]="activeFilter === 'ALL'" (click)="applyFilter('ALL')">
+    Todos <span class="tab-count">{{ counts.all }}</span>
+  </button>
+  <button class="filter-tab" [class.active]="activeFilter === 'PENDING'" (click)="applyFilter('PENDING')">
+    Pendentes <span class="tab-count">{{ counts.pending }}</span>
+  </button>
+  <button class="filter-tab" [class.active]="activeFilter === 'CONFIRMED'" (click)="applyFilter('CONFIRMED')">
+    Confirmados <span class="tab-count">{{ counts.confirmed }}</span>
+  </button>
+  <button class="filter-tab" [class.active]="activeFilter === 'COMPLETED'" (click)="applyFilter('COMPLETED')">
+    Concluídos <span class="tab-count">{{ counts.completed }}</span>
+  </button>
+  <button class="filter-tab" [class.active]="activeFilter === 'CANCELLED'" (click)="applyFilter('CANCELLED')">
+    Cancelados <span class="tab-count">{{ counts.cancelled }}</span>
+  </button>
+</div>
+
+<!-- Loading -->
+@if (loading) {
+  <div class="history-cards">
+    @for (i of [1,2,3]; track i) {
+      <div class="skeleton skeleton-card" style="height: 200px; border-radius: var(--radius-xl);"></div>
+    }
+  </div>
+}
+
+<!-- Empty State -->
+@if (!loading && filteredHistory.length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="ph ph-calendar-blank"></i>
+    </div>
+    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+      Nenhum agendamento
+    </h3>
+    <p class="text-muted">
+      @if (activeFilter === 'ALL') {
+        Você ainda não possui agendamentos marcados conosco.
+      } @else {
+        Você não possui nenhum agendamento com este status no momento.
+      }
+    </p>
+  </div>
+}
+
+<!-- Appointment Cards -->
+@if (!loading && filteredHistory.length > 0) {
+  <div class="history-cards">
+    @for (app of filteredHistory; track app.id) {
+      <div class="appointment-card" [class.cancelled-card]="app.status === 'CANCELLED'">
+        
+        <!-- Header: Service & Status -->
+        <div class="card-header">
+          <div class="card-service-info">
+            <div class="service-icon">
+              <i class="ph ph-scissors"></i>
+            </div>
+            <div class="service-details">
+              <h4>{{ app.service?.serviceName || app.serviceName }}</h4>
+              <p>Barbearia Cortês</p>
+            </div>
+          </div>
+          <span [class]="getStatusBadgeClass(app.status)">
+            <i [class]="'ph ' + getStatusIcon(app.status)"></i>
+            {{ translateStatus(app.status) }}
+          </span>
+        </div>
+        
+        <!-- Body: Date, Time & Price -->
+        <div class="card-body">
+          <div class="info-row">
+            <div class="info-icon"><i class="ph ph-calendar-blank"></i></div>
+            <div class="info-text">
+              <span class="info-label">Data</span>
+              <span class="info-value">{{ app.dateTime | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <div class="info-icon"><i class="ph ph-clock"></i></div>
+            <div class="info-text">
+              <span class="info-label">Horário</span>
+              <span class="info-value">{{ app.dateTime | date:'HH:mm' }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon"><i class="ph ph-currency-circle-dollar"></i></div>
+            <div class="info-text">
+              <span class="info-label">Valor</span>
+              <span class="info-value">{{ app.price | currency:'BRL' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          @if (app.status === 'PENDING' || app.status === 'CONFIRMED') {
+            <button class="btn-cancel" (click)="openCancelModal(app.id!)">
+              <i class="ph ph-x"></i> Cancelar Agendamento
+            </button>
+          } @else {
+            <div style="height: 36px;"></div> <!-- Spacer if no actions -->
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Confirm Modal -->
+<app-confirm-modal
+  [isOpen]="showCancelModal"
+  title="Cancelar agendamento"
+  message="Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita."
+  confirmText="Sim, cancelar"
+  icon="warning-circle"
+  variant="danger"
+  (confirmed)="confirmCancel()"
+  (cancelled)="closeCancelModal()">
+</app-confirm-modal>

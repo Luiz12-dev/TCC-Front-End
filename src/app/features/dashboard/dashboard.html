@@ -1,0 +1,80 @@
+<div class="metrics-grid">
+  <div class="card metric-card">
+    <span class="metric-title">RECEITA MENSAL</span>
+    <span class="metric-value">{{ monthlyRevenue | currency:'BRL':'symbol' }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-title">AGENDAMENTOS HOJE</span>
+    <span class="metric-value">{{ todayAppointmentsCount }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-title">ATENDIMENTOS ATIVOS</span>
+    <span class="metric-value">{{ activeAppointmentsCount }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-title">TICKET MÉDIO</span>
+    <span class="metric-value">{{ averageTicket | currency:'BRL':'symbol' }}</span>
+  </div>
+</div>
+
+<div class="dashboard-content">
+  <div class="left-col">
+    <div class="card agenda-card">
+      <div class="card-header">
+        <h3>Agenda do Dia</h3>
+        <span class="badge">Hoje</span>
+      </div>
+      <div class="card-body" [class.empty-state]="loading || appointments.length === 0">
+        <p *ngIf="loading" class="text-muted">Carregando...</p>
+        <p *ngIf="!loading && appointments.length === 0" class="text-muted">Nenhum agendamento para hoje.</p>
+        
+        <div *ngIf="!loading && appointments.length > 0" class="appointments-list">
+          <div *ngFor="let app of appointments" class="appointment-item flex justify-between items-center" style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+            <div class="appointment-info">
+              <h4 style="margin: 0; font-size: 0.875rem;">{{ app.service?.serviceName || 'Serviço' }}</h4>
+              <p class="text-muted text-sm" style="margin: 4px 0 0;">{{ app.dateTime | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+            <div class="appointment-status">
+              <span class="badge" [ngClass]="app.status.toLowerCase()">{{ app.status }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="card highlight-card">
+      <h3 class="highlight-title">RECEITA DO MÊS</h3>
+      <div class="highlight-value">{{ monthlyRevenue | currency:'BRL':'symbol' }}</div>
+      <p class="text-muted text-sm">{{ statusDistribution.COMPLETED }} agendamentos concluídos</p>
+      <div class="circle-decoration"></div>
+    </div>
+
+    <div class="card status-card">
+      <h3>Distribuição por status</h3>
+      <div class="status-list">
+        <div class="status-item">
+          <span class="status-badge pending">PENDENTE</span>
+          <span class="status-count">{{ statusDistribution.PENDING }}</span>
+        </div>
+        <div class="status-item">
+          <span class="status-badge confirmed">CONFIRMADO</span>
+          <span class="status-count">{{ statusDistribution.CONFIRMED }}</span>
+        </div>
+        <div class="status-item">
+          <span class="status-badge progress">EM ANDAMENTO</span>
+          <span class="status-count">{{ statusDistribution.IN_PROGRESS }}</span>
+        </div>
+        <div class="status-item">
+          <span class="status-badge done">CONCLUÍDO</span>
+          <span class="status-count">{{ statusDistribution.COMPLETED }}</span>
+        </div>
+        <div class="status-item">
+          <span class="status-badge canceled">CANCELADO</span>
+          <span class="status-count">{{ statusDistribution.CANCELLED }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

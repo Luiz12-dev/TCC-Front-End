@@ -1,0 +1,83 @@
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h2>Serviços</h2>
+    <p class="text-muted">Catálogo De Serviços Oferecidos</p>
+  </div>
+  <button class="btn btn-primary" (click)="openModal()">
+    <i class="ph ph-plus"></i> Novo Serviço
+  </button>
+</div>
+
+<div class="card services-card">
+  <div class="card-body" [class.empty-state]="loading || services.length === 0">
+    <p *ngIf="loading" class="text-muted">Carregando...</p>
+    <p *ngIf="!loading && services.length === 0" class="text-muted text-error">Nenhum Serviço encontrado.</p>
+    
+    <div *ngIf="!loading && services.length > 0" class="table-container">
+      <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+          <tr>
+            <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem;">NOME</th>
+            <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem;">DESCRIÇÃO</th>
+            <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem;">PREÇO</th>
+            <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem;">DURAÇÃO</th>
+            <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem; text-align: right;">AÇÕES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of services" style="transition: background-color 0.2s;">
+            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">{{ s.serviceName }}</td>
+            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ s.description }}</td>
+            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">{{ s.price | currency:'BRL':'symbol' }}</td>
+            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">{{ s.durationMin }} min</td>
+            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: right;">
+              <button class="btn-icon" (click)="openModal(s)" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;"><i class="ph ph-pencil-simple"></i></button>
+              <button class="btn-icon" (click)="deleteService(s.id!)" style="background: none; border: none; color: var(--status-canceled-text); cursor: pointer; padding: 4px; margin-left: 8px;"><i class="ph ph-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (isModalOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content card" (click)="$event.stopPropagation()">
+      <div class="modal-header flex justify-between items-center">
+        <h3>{{ editingId ? 'Editar Serviço' : 'Novo Serviço' }}</h3>
+        <button class="close-btn" (click)="closeModal()"><i class="ph ph-x"></i></button>
+      </div>
+      
+      <form [formGroup]="serviceForm" (ngSubmit)="saveService()">
+        <div class="modal-body flex-col gap-md">
+          <div class="form-group">
+            <label>NOME DO SERVIÇO</label>
+            <input type="text" formControlName="serviceName" placeholder="Ex: Corte Degrade">
+          </div>
+          
+          <div class="form-group">
+            <label>DESCRIÇÃO</label>
+            <textarea rows="4" formControlName="description" placeholder="Descrição do serviço..."></textarea>
+          </div>
+          
+          <div class="form-row flex gap-md">
+            <div class="form-group flex-1">
+              <label>PREÇO (R$)</label>
+              <input type="number" formControlName="price" placeholder="0.00">
+            </div>
+            <div class="form-group flex-1">
+              <label>DURAÇÃO (MIN)</label>
+              <input type="number" formControlName="durationMin" placeholder="30">
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer flex justify-end gap-md">
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="serviceForm.invalid">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

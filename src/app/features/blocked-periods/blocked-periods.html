@@ -1,0 +1,75 @@
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h2>Períodos Bloqueados</h2>
+    <p class="text-muted">Adicione pausas, férias ou dias sem atendimento</p>
+  </div>
+  <button class="btn btn-primary" (click)="openModal()">
+    <i class="ph ph-plus"></i> Novo Bloqueio
+  </button>
+</div>
+
+<div class="card blocked-card">
+  <div class="card-body" [class.empty-state]="loading || blockedPeriods.length === 0">
+    <p *ngIf="loading" class="text-muted">Carregando...</p>
+    <p *ngIf="!loading && blockedPeriods.length === 0" class="text-muted text-error">Nenhum bloqueio agendado.</p>
+    
+    <div *ngIf="!loading && blockedPeriods.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Motivo</th>
+            <th>Início</th>
+            <th>Fim</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bp of blockedPeriods">
+            <td>{{ bp.reason }}</td>
+            <td>{{ bp.startDateTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ bp.endDateTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="actions">
+              <button class="btn-icon" (click)="deletePeriod(bp.id!)"><i class="ph ph-trash text-error"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (isModalOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content card" (click)="$event.stopPropagation()">
+      <div class="modal-header flex justify-between items-center">
+        <h3>Novo Bloqueio</h3>
+        <button class="close-btn" (click)="closeModal()"><i class="ph ph-x"></i></button>
+      </div>
+      
+      <form [formGroup]="bpForm" (ngSubmit)="savePeriod()">
+        <div class="modal-body flex-col gap-md">
+          <div class="form-group">
+            <label>MOTIVO / TÍTULO</label>
+            <input type="text" formControlName="reason" placeholder="Ex: Feriado Nacional">
+          </div>
+          
+          <div class="form-row flex gap-md">
+            <div class="form-group flex-1">
+              <label>DATA/HORA INÍCIO</label>
+              <input type="datetime-local" formControlName="startDateTime">
+            </div>
+            <div class="form-group flex-1">
+              <label>DATA/HORA FIM</label>
+              <input type="datetime-local" formControlName="endDateTime">
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer flex justify-end gap-md">
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="bpForm.invalid">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

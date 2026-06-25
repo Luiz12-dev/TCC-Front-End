@@ -1,0 +1,223 @@
+<!-- Stepper -->
+<div class="stepper">
+  <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1" (click)="goToStep(1)">
+    <div class="step-circle">
+      @if (currentStep > 1) { <i class="ph ph-check"></i> } @else { 1 }
+    </div>
+    <span class="step-label">Serviço</span>
+  </div>
+  <div class="step-line" [class.active]="currentStep > 1"></div>
+  <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+    <div class="step-circle">
+      @if (currentStep > 2) { <i class="ph ph-check"></i> } @else { 2 }
+    </div>
+    <span class="step-label">Data</span>
+  </div>
+  <div class="step-line" [class.active]="currentStep > 2"></div>
+  <div class="step" [class.active]="currentStep >= 3" [class.done]="currentStep > 3">
+    <div class="step-circle">
+      @if (currentStep > 3) { <i class="ph ph-check"></i> } @else { 3 }
+    </div>
+    <span class="step-label">Horário</span>
+  </div>
+  <div class="step-line" [class.active]="currentStep > 3"></div>
+  <div class="step" [class.active]="currentStep >= 4">
+    <div class="step-circle">
+      @if (currentStep > 4) { <i class="ph ph-check"></i> } @else { 4 }
+    </div>
+    <span class="step-label">Confirmar</span>
+  </div>
+</div>
+
+<form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+
+  <!-- Step 1: Service Selection -->
+  @if (currentStep === 1) {
+    <div class="step-content animate-in">
+      <div class="step-header">
+        <h2>Escolha o serviço</h2>
+        <p class="text-secondary">Selecione o serviço desejado para continuar</p>
+      </div>
+      
+      @if (loadingServices) {
+        <div class="services-grid">
+          @for (i of [1,2,3,4]; track i) {
+            <div class="skeleton skeleton-card" style="height: 120px"></div>
+          }
+        </div>
+      } @else if (services.length === 0) {
+        <div class="empty-state">
+          <i class="ph ph-scissors" style="font-size: 2rem; color: var(--text-muted)"></i>
+          <p class="text-muted">Nenhum serviço disponível no momento.</p>
+        </div>
+      } @else {
+        <div class="services-grid">
+          @for (service of services; track service.id) {
+            <button type="button" class="service-card" 
+                    [class.selected]="selectedService?.id === service.id"
+                    (click)="selectService(service)">
+              <div class="service-icon">
+                <i class="ph ph-scissors"></i>
+              </div>
+              <div class="service-info">
+                <h4>{{ service.serviceName }}</h4>
+                <p class="text-secondary text-sm">{{ service.description || 'Serviço profissional' }}</p>
+              </div>
+              <div class="service-meta">
+                <span class="service-price">{{ service.price | currency:'BRL' }}</span>
+                <span class="service-duration"><i class="ph ph-clock"></i> {{ service.durationMin }} min</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Step 2: Date Selection -->
+  @if (currentStep === 2) {
+    <div class="step-content animate-in">
+      <div class="step-header">
+        <h2>Escolha a data</h2>
+        <p class="text-secondary">
+          Serviço: <strong class="text-accent">{{ selectedService?.serviceName }}</strong>
+        </p>
+      </div>
+
+      <div class="date-picker-wrapper card">
+        <div class="form-group">
+          <label>SELECIONE UMA DATA</label>
+          <input type="date" formControlName="date" [min]="minDate" (change)="onDateSelected()">
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button type="button" class="btn btn-outline" (click)="goToStep(1)">
+          <i class="ph ph-arrow-left"></i> Voltar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 3: Time Selection -->
+  @if (currentStep === 3) {
+    <div class="step-content animate-in">
+      <div class="step-header">
+        <h2>Escolha o horário</h2>
+        <p class="text-secondary">
+          {{ selectedService?.serviceName }} · <strong class="text-accent">{{ getFormattedDate() }}</strong>
+        </p>
+      </div>
+
+      @if (loadingSlots) {
+        <div class="slots-grid">
+          @for (i of [1,2,3,4,5,6,7,8]; track i) {
+            <div class="skeleton" style="height: 44px; border-radius: 8px"></div>
+          }
+        </div>
+      } @else if (availableSlots.length === 0) {
+        <div class="empty-state card" style="min-height: 150px">
+          <i class="ph ph-calendar-x" style="font-size: 2rem; color: var(--status-canceled-text)"></i>
+          <p class="text-muted">Nenhum horário disponível nesta data.</p>
+          <button type="button" class="btn btn-outline btn-sm" (click)="goToStep(2)">Escolher outra data</button>
+        </div>
+      } @else {
+        <div class="slots-grid">
+          @for (slot of availableSlots; track slot) {
+            <button type="button" class="slot-btn" 
+                    [class.selected]="bookingForm.get('time')?.value === slot"
+                    (click)="selectSlot(slot)">
+              {{ slot.substring(0, 5) }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="step-nav">
+        <button type="button" class="btn btn-outline" (click)="goToStep(2)">
+          <i class="ph ph-arrow-left"></i> Voltar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 4: Confirmation -->
+  @if (currentStep === 4) {
+    <div class="step-content animate-in">
+      <div class="step-header">
+        <h2>Confirme seu agendamento</h2>
+        <p class="text-secondary">Revise os detalhes antes de confirmar</p>
+      </div>
+
+      <div class="confirmation-card card">
+        <div class="confirm-row">
+          <div class="confirm-label">
+            <i class="ph ph-scissors"></i>
+            <span>Serviço</span>
+          </div>
+          <span class="confirm-value">{{ selectedService?.serviceName }}</span>
+        </div>
+        <div class="confirm-row">
+          <div class="confirm-label">
+            <i class="ph ph-calendar"></i>
+            <span>Data</span>
+          </div>
+          <span class="confirm-value">{{ getFormattedDate() }}</span>
+        </div>
+        <div class="confirm-row">
+          <div class="confirm-label">
+            <i class="ph ph-clock"></i>
+            <span>Horário</span>
+          </div>
+          <span class="confirm-value">{{ getFormattedTime() }}</span>
+        </div>
+        <div class="confirm-row">
+          <div class="confirm-label">
+            <i class="ph ph-timer"></i>
+            <span>Duração</span>
+          </div>
+          <span class="confirm-value">{{ selectedService?.durationMin }} minutos</span>
+        </div>
+        <div class="confirm-divider"></div>
+        <div class="confirm-row total">
+          <div class="confirm-label">
+            <i class="ph ph-currency-circle-dollar"></i>
+            <span>Total</span>
+          </div>
+          <span class="confirm-value price">{{ selectedService?.price | currency:'BRL' }}</span>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button type="button" class="btn btn-outline" (click)="goToStep(3)">
+          <i class="ph ph-arrow-left"></i> Voltar
+        </button>
+        <button type="submit" class="btn btn-primary btn-large" [disabled]="bookingForm.invalid || submitting">
+          @if (submitting) {
+            <i class="ph ph-spinner animate-spin"></i> Confirmando...
+          } @else {
+            <i class="ph ph-check-circle"></i> Confirmar Agendamento
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 5: Success -->
+  @if (currentStep === 5) {
+    <div class="step-content animate-in">
+      <div class="success-screen">
+        <div class="success-icon">
+          <i class="ph ph-check-circle"></i>
+        </div>
+        <h2>Agendamento confirmado!</h2>
+        <p class="text-secondary">Seu horário foi reservado com sucesso. Redirecionando para o histórico...</p>
+        <div class="success-details card">
+          <span><strong>{{ selectedService?.serviceName }}</strong></span>
+          <span>{{ getFormattedDate() }} às {{ getFormattedTime() }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+</form>

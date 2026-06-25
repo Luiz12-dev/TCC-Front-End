@@ -1,0 +1,91 @@
+.flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.items-center { align-items: center; }
+.gap-md { gap: 16px; }
+.mt-xl { margin-top: 32px; }
+.mt-sm { margin-top: 8px; }
+.p-xl { padding: 32px; }
+
+.filter-select {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.report-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.summary-card {
+  border-top: 3px solid var(--accent-color);
+}
+.summary-card .card-body {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+}
+.card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: rgba(228, 197, 144, 0.1);
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+.card-title {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.card-value {
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin-top: 4px;
+}
+
+.report-details .card-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border-color);
+}
+.report-details .card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.report-details .card-body {
+  padding: var(--spacing-xl);
+}
+.badge-done {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.visual-bar {
+  width: 100%;
+  height: 24px;
+  background-color: var(--bg-main);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-color), #f3ddab);
+  border-radius: 12px;
+  transition: width 1s ease-in-out;
+}
+.text-center { text-align: center; }
