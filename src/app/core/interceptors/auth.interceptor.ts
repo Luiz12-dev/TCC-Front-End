@@ -8,7 +8,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // 1. Preparamos os cabeçalhos. O Ngrok SEMPRE vai.
-  let customHeaders = req.headers.set('ngrok-skip-browser-warning', 'true');
+  // 1. Preparamos os cabeçalhos para burlar as telas de aviso
+  let customHeaders = req.headers
+    .set('ngrok-skip-browser-warning', 'true')
+    .set('Bypass-Tunnel-Reminder', 'true'); // <-- Adicione esta linha para o Localtunnel
 
   // 2. Se o token existir, adicionamos ele também.
   if (token) {
