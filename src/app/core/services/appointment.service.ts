@@ -32,6 +32,6 @@ export class AppointmentService {
   }
 
   getMyHistory(): Observable<Appointment[]> {
-    return this.http.get<Appointment[]>(`${this.apiUrl}/history`);
+    return this.http.get<Appointment[]>(`${this.apiUrl}/my-history`);
   }
 }

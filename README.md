@@ -348,10 +348,10 @@ O frontend se comunica com **dois microsserviços**:
 |---|---|---|---|
 | `GET` | `/api/appointments` | Listar todos os agendamentos | OWNER |
 | `POST` | `/api/appointments` | Criar agendamento | CLIENT |
-| `GET` | `/api/appointments/history` | Histórico do cliente logado | CLIENT |
+| `GET` | `/api/appointments/my-history` | Histórico do cliente logado | CLIENT |
 | `GET` | `/api/appointments/available-slots` | Horários disponíveis | Público |
 | `PATCH` | `/api/appointments/{id}/status` | Atualizar status | OWNER |
-| `PATCH` | `/api/appointments/{id}/cancel` | Cancelar agendamento | CLIENT |
+| `PATCH` | `/api/appointments/{id}/cancel` | Cancelar agendamento (apenas o próprio, ou qualquer um se OWNER) | CLIENT + OWNER |
 | `GET` | `/api/services` | Listar serviços | Público |
 | `POST` | `/api/services` | Criar serviço | OWNER |
 | `PUT` | `/api/services/{id}` | Atualizar serviço | OWNER |
