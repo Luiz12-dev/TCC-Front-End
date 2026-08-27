@@ -39,8 +39,9 @@ export class Booking implements OnInit {
   minDate = '';
 
   ngOnInit() {
-    const today = new Date();
-    this.minDate = today.toISOString().split('T')[0];
+    // toISOString() converte para UTC: no fuso do Brasil (UTC-3) isso empurra
+    // a data minima para amanha a partir das 21h, travando o agendamento de hoje.
+    this.minDate = this.toIsoDate(new Date());
 
     this.barberServiceApi.getAll().subscribe({
       next: (data) => {
@@ -56,7 +57,7 @@ export class Booking implements OnInit {
     // Listen for changes to fetch slots
     this.bookingForm.get('date')?.valueChanges.subscribe(date => {
       const serviceId = this.bookingForm.get('serviceId')?.value;
-      if (date && serviceId) {
+      if (serviceId && this.isSelectableDate(date)) {
         this.fetchSlots(date, serviceId);
       }
     });
@@ -64,7 +65,7 @@ export class Booking implements OnInit {
     this.bookingForm.get('serviceId')?.valueChanges.subscribe(serviceId => {
       const date = this.bookingForm.get('date')?.value;
       this.selectedService = this.services.find(s => s.id === serviceId) || null;
-      if (date && serviceId) {
+      if (serviceId && this.isSelectableDate(date)) {
         this.fetchSlots(date, serviceId);
       }
     });
@@ -88,9 +89,27 @@ export class Booking implements OnInit {
     this.currentStep = step;
   }
 
+  /** Formata um Date no fuso local como yyyy-MM-dd, sem passar por UTC. */
+  private toIsoDate(d: Date): string {
+    const mes = `${d.getMonth() + 1}`.padStart(2, '0');
+    const dia = `${d.getDate()}`.padStart(2, '0');
+    return `${d.getFullYear()}-${mes}-${dia}`;
+  }
+
+  /**
+   * Um <input type="date"> dispara change/input a cada digito digitado no ano:
+   * ao digitar "2026" o valor passa por 0002, 0020 e 0202 antes de chegar em 2026.
+   * Cada um desses valores intermediarios e uma data completa e valida para o
+   * navegador, entao so tratamos como escolha real a data que nao seja anterior
+   * a hoje -- os anos parciais ficam no passado e sao ignorados.
+   */
+  private isSelectableDate(date: string | null | undefined): date is string {
+    return !!date && /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= this.minDate;
+  }
+
   onDateSelected() {
     const date = this.bookingForm.get('date')?.value;
-    if (date) {
+    if (this.isSelectableDate(date)) {
       this.goToStep(3);
     }
   }
