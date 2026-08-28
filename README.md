@@ -54,7 +54,7 @@ O sistema utiliza autenticação JWT com integração a um microsserviço de aut
 | **Express** | 5.1.x | Servidor SSR |
 | **Phosphor Icons** | CDN | Biblioteca de ícones |
 | **Google Fonts (Inter)** | CDN | Tipografia moderna |
-| **Vitest** | 4.0.x | Framework de testes unitários |
+| **Vitest** | 4.0.x | Framework de testes unitários (configurado; os `.spec.ts` atuais são os esqueletos gerados pelo Angular CLI) |
 
 ---
 
@@ -203,6 +203,11 @@ export const environment = {
   authUrl: 'http://localhost:8081/api/auth'  // Microsserviço de Autenticação
 };
 ```
+
+> **Cuidado ao demonstrar remotamente:** este arquivo costuma ser repontado para
+> URLs de túnel (ngrok, localtunnel) durante apresentações e acaba commitado
+> assim. Se as chamadas à API falharem com erro de DNS ou aviso de túnel, é o
+> primeiro lugar a conferir — restaure os valores `localhost` acima.
 
 ---
 
