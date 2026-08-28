@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://parsley-rely-snub.ngrok-free.dev/api',
-  authUrl: 'https://brown-cobras-vanish.loca.lt',
+  apiUrl: 'http://localhost:8080/api',
+  authUrl: 'http://localhost:8081/api/auth',
 };
