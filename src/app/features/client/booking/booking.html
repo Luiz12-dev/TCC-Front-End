@@ -127,7 +127,7 @@
             <button type="button" class="slot-btn" 
                     [class.selected]="bookingForm.get('time')?.value === slot"
                     (click)="selectSlot(slot)">
-              {{ slot.substring(0, 5) }}
+              {{ slot }}
             </button>
           }
         </div>

@@ -141,9 +141,8 @@ export class Booking implements OnInit {
   }
 
   getFormattedTime(): string {
-    const time = this.bookingForm.get('time')?.value;
-    if (!time) return '';
-    return time.substring(0, 5);
+    // A API ja devolve HH:mm; nao ha mais segundos para cortar.
+    return this.bookingForm.get('time')?.value ?? '';
   }
 
   onSubmit() {
