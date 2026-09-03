@@ -54,7 +54,7 @@ O sistema utiliza autenticação JWT com integração a um microsserviço de aut
 | **Express** | 5.1.x | Servidor SSR |
 | **Phosphor Icons** | CDN | Biblioteca de ícones |
 | **Google Fonts (Inter)** | CDN | Tipografia moderna |
-| **Vitest** | 4.0.x | Framework de testes unitários (configurado; os `.spec.ts` atuais são os esqueletos gerados pelo Angular CLI) |
+| **Vitest** | 4.0.x | Framework de testes unitários — 46 testes cobrindo sessão, guards, interceptor e o wizard de agendamento |
 
 ---
 
@@ -99,8 +99,8 @@ O sistema utiliza autenticação JWT com integração a um microsserviço de aut
 ### Em Desenvolvimento 🔧
 
 - [ ] **Perfil do Usuário** — Tela para edição de dados pessoais (nome, telefone)
-- [ ] **Interceptor 401** — Redirecionamento automático ao login quando o token expirar
-- [ ] **Testes Unitários** — Cobertura de testes nos componentes e serviços
+- [x] **Interceptor 401** — Redirecionamento automático ao login quando o token expirar
+- [x] **Testes Unitários** — Cobertura nos serviços, guards e interceptor (46 testes)
 - [ ] **Notificações em Tempo Real** — Push notifications para mudanças de status
 
 ---
