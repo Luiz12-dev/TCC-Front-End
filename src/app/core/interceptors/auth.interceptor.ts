@@ -1,28 +1,44 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { ToastService } from '../services/toast.service';
+
+/** O login e o cadastro respondem 401/403 por credencial errada, nao por sessao expirada. */
+const ROTAS_PUBLICAS_DE_AUTH = ['/login', '/register'];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  let token = null;
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const toast = inject(ToastService);
 
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem('token');
-  }
+  const token = authService.getToken();
 
-  // 1. Preparamos os cabeçalhos. O Ngrok SEMPRE vai.
-  // 1. Preparamos os cabeçalhos para burlar as telas de aviso
-  let customHeaders = req.headers
+  // Cabeçalhos que desarmam as telas de aviso do ngrok e do localtunnel,
+  // usados nas demonstrações remotas.
+  let headers = req.headers
     .set('ngrok-skip-browser-warning', 'true')
-    .set('Bypass-Tunnel-Reminder', 'true'); // <-- Adicione esta linha para o Localtunnel
+    .set('Bypass-Tunnel-Reminder', 'true');
 
-  // 2. Se o token existir, adicionamos ele também.
   if (token) {
-    customHeaders = customHeaders.set('Authorization', `Bearer ${token}`);
+    headers = headers.set('Authorization', `Bearer ${token}`);
   }
 
-  // 3. Clonamos a requisição UMA ÚNICA VEZ com os cabeçalhos finais.
-  const clonedReq = req.clone({
-    headers: customHeaders,
-  });
+  return next(req.clone({ headers })).pipe(
+    catchError((erro: HttpErrorResponse) => {
+      const ehRotaDeAuth = ROTAS_PUBLICAS_DE_AUTH.some(r => req.url.includes(r));
 
-  // 4. Enviamos para o servidor.
-  return next(clonedReq);
+      // Sem este bloco, um token expirado deixava a tela renderizar o estado
+      // vazio ("Você ainda não possui agendamentos") como se os dados tivessem
+      // sumido, enquanto a UI continuava se achando logada.
+      if (erro.status === 401 && !ehRotaDeAuth) {
+        authService.clearSession();
+        toast.warning('Sua sessão expirou. Faça login novamente.');
+        router.navigate(['/auth/login']);
+      }
+
+      return throwError(() => erro);
+    })
+  );
 };
