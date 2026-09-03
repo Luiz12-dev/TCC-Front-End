@@ -18,7 +18,10 @@ export class Register {
   registerForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
+    // O backend exige 10 ou 11 digitos; o telefone vai para o JWT e,
+    // de la, para o cadastro do cliente no Core.
+    phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,11}$/)]]
   });
 
   loading = false;
