@@ -54,7 +54,7 @@ O sistema utiliza autenticação JWT com integração a um microsserviço de aut
 | **Express** | 5.1.x | Servidor SSR |
 | **Phosphor Icons** | CDN | Biblioteca de ícones |
 | **Google Fonts (Inter)** | CDN | Tipografia moderna |
-| **Vitest** | 4.0.x | Framework de testes unitários — 46 testes cobrindo sessão, guards, interceptor e o wizard de agendamento |
+| **Vitest** | 4.0.x | Framework de testes unitários — 49 testes cobrindo sessão, guards, interceptor, o wizard de agendamento e o painel do proprietário |
 
 ---
 
@@ -100,7 +100,7 @@ O sistema utiliza autenticação JWT com integração a um microsserviço de aut
 
 - [ ] **Perfil do Usuário** — Tela para edição de dados pessoais (nome, telefone)
 - [x] **Interceptor 401** — Redirecionamento automático ao login quando o token expirar
-- [x] **Testes Unitários** — Cobertura nos serviços, guards e interceptor (46 testes)
+- [x] **Testes Unitários** — Serviços, guards, interceptor, wizard e painel (49 testes)
 - [ ] **Notificações em Tempo Real** — Push notifications para mudanças de status
 
 ---
