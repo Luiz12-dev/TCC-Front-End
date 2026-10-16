@@ -24,18 +24,18 @@
         <h3>Agenda do Dia</h3>
         <span class="badge">Hoje</span>
       </div>
-      <div class="card-body" [class.empty-state]="loading || appointments.length === 0">
+      <div class="card-body" [class.empty-state]="loading || todayAppointments.length === 0">
         <p *ngIf="loading" class="text-muted">Carregando...</p>
-        <p *ngIf="!loading && appointments.length === 0" class="text-muted">Nenhum agendamento para hoje.</p>
+        <p *ngIf="!loading && todayAppointments.length === 0" class="text-muted">Nenhum agendamento para hoje.</p>
         
-        <div *ngIf="!loading && appointments.length > 0" class="appointments-list">
-          <div *ngFor="let app of appointments" class="appointment-item flex justify-between items-center" style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+        <div *ngIf="!loading && todayAppointments.length > 0" class="appointments-list">
+          <div *ngFor="let app of todayAppointments" class="appointment-item flex justify-between items-center" style="padding: 12px; border-bottom: 1px solid var(--border-color);">
             <div class="appointment-info">
-              <h4 style="margin: 0; font-size: 0.875rem;">{{ app.service?.serviceName || 'Serviço' }}</h4>
-              <p class="text-muted text-sm" style="margin: 4px 0 0;">{{ app.dateTime | date:'dd/MM/yyyy HH:mm' }}</p>
+              <h4 style="margin: 0; font-size: 0.875rem;">{{ app.serviceName || 'Serviço' }}</h4>
+              <p class="text-muted text-sm" style="margin: 4px 0 0;">{{ app.dateTime | date:'HH:mm' }} · {{ app.clientName }}</p>
             </div>
             <div class="appointment-status">
-              <span class="badge" [ngClass]="app.status.toLowerCase()">{{ app.status }}</span>
+              <span class="badge" [ngClass]="app.status.toLowerCase()">{{ translateStatus(app.status) | uppercase }}</span>
             </div>
           </div>
         </div>
@@ -47,7 +47,7 @@
     <div class="card highlight-card">
       <h3 class="highlight-title">RECEITA DO MÊS</h3>
       <div class="highlight-value">{{ monthlyRevenue | currency:'BRL':'symbol' }}</div>
-      <p class="text-muted text-sm">{{ statusDistribution.COMPLETED }} agendamentos concluídos</p>
+      <p class="text-muted text-sm">{{ monthlyCompletedCount }} agendamentos concluídos no mês</p>
       <div class="circle-decoration"></div>
     </div>
 

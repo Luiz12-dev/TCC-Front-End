@@ -13,10 +13,14 @@ export class Dashboard implements OnInit {
   private appointmentService = inject(AppointmentService);
   
   appointments: Appointment[] = [];
+  /** So os de hoje, em ordem de horario: e o que o card "Agenda do Dia" exibe. */
+  todayAppointments: Appointment[] = [];
   monthlyRevenue = 0;
   todayAppointmentsCount = 0;
   activeAppointmentsCount = 0;
   averageTicket = 0;
+  /** Concluidos do mes corrente: a mesma base da receita e do ticket medio. */
+  monthlyCompletedCount = 0;
 
   statusDistribution = {
     PENDING: 0,
@@ -51,6 +55,7 @@ export class Dashboard implements OnInit {
   calculateMetrics() {
     const today = new Date();
     today.setHours(0,0,0,0);
+    const now = new Date();
 
     let totalRevenue = 0;
     let completedCount = 0;
@@ -66,6 +71,7 @@ export class Dashboard implements OnInit {
       appDate.setHours(0,0,0,0);
       if (appDate.getTime() === today.getTime()) {
         this.todayAppointmentsCount++;
+        this.todayAppointments.push(app);
       }
 
       // Active
@@ -73,14 +79,28 @@ export class Dashboard implements OnInit {
         this.activeAppointmentsCount++;
       }
 
-      // Completed / Revenue
-      if (app.status === 'COMPLETED') {
+      // A receita e "do mes": concluidos de outros meses ficam de fora.
+      const sameMonth = appDate.getFullYear() === now.getFullYear() && appDate.getMonth() === now.getMonth();
+      if (app.status === 'COMPLETED' && sameMonth) {
         totalRevenue += app.price;
         completedCount++;
       }
     });
 
+    this.todayAppointments.sort((a, b) => a.dateTime.localeCompare(b.dateTime));
     this.monthlyRevenue = totalRevenue;
+    this.monthlyCompletedCount = completedCount;
     this.averageTicket = completedCount > 0 ? totalRevenue / completedCount : 0;
+  }
+
+  translateStatus(status: string): string {
+    switch(status) {
+      case 'PENDING': return 'Pendente';
+      case 'CONFIRMED': return 'Confirmado';
+      case 'IN_PROGRESS': return 'Em andamento';
+      case 'COMPLETED': return 'Concluído';
+      case 'CANCELLED': return 'Cancelado';
+      default: return status;
+    }
   }
 }
