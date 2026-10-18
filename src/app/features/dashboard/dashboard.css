@@ -110,6 +110,11 @@
   font-size: 1rem;
 }
 
+.status-scope {
+  margin-top: calc(-1 * var(--spacing-md));
+  margin-bottom: var(--spacing-lg);
+}
+
 .status-list {
   display: flex;
   flex-direction: column;
