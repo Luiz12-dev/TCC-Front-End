@@ -77,5 +77,11 @@ describe('Dashboard', () => {
     expect(component.monthlyRevenue).toBe(35);
     expect(component.averageTicket).toBe(35);
     expect(component.monthlyCompletedCount).toBe(1);
+
+    // A distribuicao por status, ao contrario, conta todos os meses. Sem o
+    // aviso na tela, o leitor ve "1 concluido no mes" ao lado de "2
+    // concluidos" e acha que e erro.
+    expect(component.statusDistribution.COMPLETED).toBe(2);
+    expect(fixture.nativeElement.querySelector('.status-scope').textContent).toContain('Todos os agendamentos');
   });
 });
